@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+      "typeRoots": [
+        "./node_module/@types",
+        "./src/types/express"
+  ],
+      "esModuleInterop": true,
+      "allowSyntheticDefaultImports": true,
+    }
+  }

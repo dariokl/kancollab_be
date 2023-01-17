@@ -1,0 +1,68 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String         @id @unique @default(uuid())
+  email         String         @unique
+  password      String
+  refreshTokens RefreshToken[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  Boards        BoardUser[]
+}
+
+model RefreshToken {
+  id          String   @id @unique @default(uuid())
+  hashedToken String
+  userId      String
+  User        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  revoked     Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Board {
+  id          String      @id @unique @default(uuid())
+  name        String
+  description String
+  owner       String
+  BoardUsers  BoardUser[]
+  sections    Section[]
+}
+
+model Section {
+  id      String  @id @unique @default(uuid())
+  name    String
+  tasks   Task[]
+  Board   Board?  @relation(fields: [boardId], references: [id])
+  boardId String?
+}
+
+model Task {
+  id          String   @id @unique @default(uuid())
+  title       String
+  description String
+  assignee    String
+  priority    Int
+  Section     Section? @relation(fields: [sectionId], references: [id])
+  sectionId   String?
+}
+
+model BoardUser {
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId  String
+  board   Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  boardId String
+  role    Int    @default(1)
+
+  @@unique([userId, boardId])
+}
