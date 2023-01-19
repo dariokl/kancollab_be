@@ -56,7 +56,16 @@ export const getBoardById = async ({
       description: true,
       sections: {
         include: {
-          tasks: true,
+          tasks: {
+            include: {
+              user: {
+                select: {
+                  email: true,
+                  avatar: true,
+                },
+              },
+            },
+          },
         },
       },
     },

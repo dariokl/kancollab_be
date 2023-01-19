@@ -14,13 +14,16 @@ export const findUserByEmail = (email: string) =>
     },
   });
 
-export const createUserWithEmail = ({ email, password }: IRegister) =>
-  db.user.create({
+export const createUserWithEmail = async ({ email, password }: IRegister) => {
+  const avatar = await generateAvatarUrl(email);
+  return db.user.create({
     data: {
       email,
+      avatar,
       password: bcrypt.hashSync(password, 12),
     },
   });
+};
 
 export const findUserById = (id: string) =>
   db.user.findUnique({
@@ -39,4 +42,10 @@ export const isBoardMember = async (id: string) => {
   }
 
   return false;
+};
+
+const generateAvatarUrl = async (emailAddress: string) => {
+  const salt = await bcrypt.genSalt(10);
+  const hashedInfo = await bcrypt.hash(emailAddress, salt);
+  return `https://www.gravatar.com/avatar/${hashedInfo}?d=retro`;
 };

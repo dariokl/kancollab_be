@@ -19,7 +19,7 @@ export const getMyprofile = async (
       throw new Error("User not found");
     }
 
-    res.status(200).json({ user: { email: user.email } });
+    res.status(200).json({ user: { email: user.email, avatar: user.avatar } });
   } catch (err) {
     next(err);
   }

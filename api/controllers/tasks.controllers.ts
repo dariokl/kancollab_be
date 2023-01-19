@@ -3,6 +3,7 @@ import {
   createTask as createTaskService,
   updateTaskSection,
 } from "../services/tasks.services";
+import { findUserByEmail } from "../services/user.services";
 
 export const createTask = async (
   req: Request,
@@ -10,7 +11,16 @@ export const createTask = async (
   next: NextFunction
 ) => {
   try {
-    const task = await createTaskService(req.body);
+    const { assignee: email } = req.body;
+
+    const userExist = await findUserByEmail(email);
+
+    if (!userExist) {
+      res.status(400).json({ message: `User with ${email} does not exist !` });
+      throw new Error(`User with ${email} does not exist !`);
+    }
+
+    const task = await createTaskService({ ...req.body });
 
     res.status(200).json({ message: "Successfully created new task." });
   } catch (err) {

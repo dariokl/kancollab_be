@@ -14,10 +14,12 @@ model User {
   id            String         @id @unique @default(uuid())
   email         String         @unique
   password      String
+  avatar        String
   refreshTokens RefreshToken[]
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   Boards        BoardUser[]
+  Tasks         Task[]
 }
 
 model RefreshToken {
@@ -51,6 +53,7 @@ model Task {
   id          String   @id @unique @default(uuid())
   title       String
   description String
+  user        User     @relation(fields: [assignee], references: [email])
   assignee    String
   priority    Int
   Section     Section? @relation(fields: [sectionId], references: [id])
