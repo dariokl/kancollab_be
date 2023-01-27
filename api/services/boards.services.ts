@@ -3,20 +3,13 @@ import db from "../../utils/db";
 interface ICreateBoard {
   id: string;
   name: string;
-  description: string;
   owner: string;
 }
 
-export const createNewBoard = ({
-  id,
-  name,
-  description,
-  owner,
-}: ICreateBoard) =>
+export const createNewBoard = ({ id, name, owner }: ICreateBoard) =>
   db.board.create({
     data: {
       name,
-      description,
       owner,
       BoardUsers: {
         create: {
@@ -53,7 +46,6 @@ export const getBoardById = async ({
       owner: true,
       name: true,
       id: true,
-      description: true,
       sections: {
         include: {
           tasks: {

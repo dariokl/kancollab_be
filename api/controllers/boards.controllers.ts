@@ -13,27 +13,21 @@ export const createBoard = async (
 ) => {
   try {
     const { userId } = req.payload as IJWTPayload;
-    const { name, description, members } = req.body;
+    const { name } = req.body;
 
     const user = await findUserById(userId);
 
     if (!user) {
-      res.status(400).json({ message: "User doesnt exist" });
+      res.status(400).json({ message: "User doesnt exist." });
       throw new Error("User doesnt exist.");
     }
 
-    if (!name || !description) {
-      res.status(400).json({ message: "Name and description are required." });
-      throw new Error("Invalid login credentials.");
+    if (!name) {
+      res.status(400).json({ message: "Name is required." });
+      throw new Error("Name is required.");
     }
 
-    const board = await createNewBoard({
-      id: userId,
-      name,
-      description,
-      owner: user.email,
-    });
-
+    await createNewBoard({ id: user.id, name, owner: user.email });
     res.status(200).json({ message: "Successfully created new board." });
   } catch (err) {
     next(err);

@@ -33,12 +33,11 @@ model RefreshToken {
 }
 
 model Board {
-  id          String      @id @unique @default(uuid())
-  name        String
-  description String
-  owner       String
-  BoardUsers  BoardUser[]
-  sections    Section[]
+  id         String      @id @unique @default(uuid())
+  name       String
+  owner      String
+  BoardUsers BoardUser[]
+  sections   Section[]
 }
 
 model Section {
