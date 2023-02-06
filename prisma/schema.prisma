@@ -20,6 +20,7 @@ model User {
   updatedAt     DateTime       @updatedAt
   Boards        BoardUser[]
   Tasks         Task[]
+  TeamUser      TeamUser[]
 }
 
 model RefreshToken {
@@ -67,4 +68,19 @@ model BoardUser {
   role    Int    @default(1)
 
   @@unique([userId, boardId])
+}
+
+model Team {
+  id       String     @id @unique @default(uuid())
+  TeamUser TeamUser[]
+}
+
+model TeamUser {
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  teamId String
+  role   Int    @default(1)
+
+  @@unique([userId, teamId])
 }

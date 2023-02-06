@@ -1,4 +1,5 @@
 import db from "../../utils/db";
+import nodemailer from "nodemailer";
 
 interface ICreateBoard {
   id: string;
@@ -6,8 +7,8 @@ interface ICreateBoard {
   owner: string;
 }
 
-export const createNewBoard = ({ id, name, owner }: ICreateBoard) =>
-  db.board.create({
+export const createNewBoard = async ({ id, name, owner }: ICreateBoard) => {
+  const board = await db.board.create({
     data: {
       name,
       owner,
@@ -32,6 +33,7 @@ export const createNewBoard = ({ id, name, owner }: ICreateBoard) =>
       },
     },
   });
+};
 
 export const getBoardById = async ({
   id,
